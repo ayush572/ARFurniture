@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Unity.XR.CoreUtils;
+using UnityEngine.UI; //to access UI button
+using UnityEngine.EventSystems; //to access the events being done on the button
 
 
 public class FurniturePlacementManager : MonoBehaviour
@@ -25,7 +27,7 @@ public class FurniturePlacementManager : MonoBehaviour
             if(Input.GetTouch(0).phase == TouchPhase.Began)
             {
                 bool collision = raycastManager.Raycast(Input.GetTouch(0).position, raycastHits, TrackableType.PlaneWithinPolygon);
-                if (collision)
+                if (collision && isButtonPressed()==false)
                 {
                     //if collision has happened, then we'll be plaing that object at the position of the raycast
                     GameObject _object = Instantiate(SpawnableFurniture); //creating an instance of the object
@@ -42,6 +44,18 @@ public class FurniturePlacementManager : MonoBehaviour
                 planeManager.enabled = false;
             }
         }
+    }
+
+    public bool isButtonPressed()
+    {
+        //this ? -> here for the null check
+        if(EventSystem.current.currentSelectedGameObject?.GetComponent<Button>() == null)
+        {
+            //if we havent pressed on the button
+            return false;
+        }
+        return true;
+        
     }
 
     //to switch between furnitures
